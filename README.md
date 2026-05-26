@@ -26,25 +26,63 @@
 
 - Node.js 20+
 - Python 3.12+
+- Git
 - (optional) PostgreSQL 16, Redis 7
 
-### Backend
+### 1. Clone
 
+```bash
+git clone https://github.com/shubham1056/ScriptOPS.git
+cd ScriptOPS
+```
+
+### 2. Backend (FastAPI)
+
+**Windows:**
 ```cmd
 cd apps\api
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 copy .env.example .env
-:: edit .env and set AZURE_OPENAI_* values
-alembic upgrade head
+```
+
+**macOS / Linux:**
+```bash
+cd apps/api
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+```
+
+Then **edit `apps/api/.env`** and set the required values:
+
+```dotenv
+# Generate with: python -c "import secrets; print(secrets.token_urlsafe(48))"
+JWT_SECRET_KEY=<paste-generated-secret>
+
+# Single-account portal credentials (the API auto-seeds this user on startup)
+PORTAL_USER_EMAIL=userc2i@ust.com
+PORTAL_USER_PASSWORD=Userc2i@qwertyuiop
+PORTAL_USER_NAME=C2I Portal
+
+# Azure OpenAI — get these from the team lead
+AZURE_OPENAI_API_KEY=
+AZURE_OPENAI_ENDPOINT=
+AZURE_OPENAI_DEPLOYMENT=
+```
+
+Run the API:
+```bash
 uvicorn app.main:app --reload --port 4000
 ```
 
-API docs → **http://localhost:4000/docs**
+API → **http://localhost:4000** · Docs → **http://localhost:4000/docs**
 
-### Frontend
+### 3. Frontend (Next.js) — in a new terminal
 
+**Windows:**
 ```cmd
 cd apps\web
 npm install
@@ -52,7 +90,33 @@ copy .env.example .env.local
 npm run dev
 ```
 
+**macOS / Linux:**
+```bash
+cd apps/web
+npm install
+cp .env.example .env.local
+npm run dev
+```
+
 App → **http://localhost:3000**
+
+### 4. Sign in
+
+Open http://localhost:3000/login and use the portal credentials from your `.env`:
+
+- **Email:** `userc2i@ust.com`
+- **Password:** `Userc2i@qwertyuiop`
+
+> The portal is locked to a single provisioned account by design. There is no self-service registration. On every API startup, the user from `PORTAL_USER_EMAIL` / `PORTAL_USER_PASSWORD` is upserted as `ADMIN` and any other accounts in the `users` table are purged. To rotate the credential, change `.env` and restart the API.
+
+### Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| `Port 3000 / 4000 already in use` | Kill the existing process (`taskkill /F /IM node.exe` on Windows, `lsof -ti:4000 \| xargs kill` on macOS/Linux) and retry. |
+| Startup error: `PORTAL_USER_EMAIL and PORTAL_USER_PASSWORD must be set` | Fill those values in `apps/api/.env`. |
+| Login returns `401 Invalid email or password` | Your `.env` values don't match what you typed. Update `.env` and restart the API so the seeder re-runs. |
+| `pydantic_settings ValidationError: JWT_SECRET_KEY` | The secret must be at least 32 chars — regenerate with the `secrets.token_urlsafe(48)` command above. |
 
 ---
 
