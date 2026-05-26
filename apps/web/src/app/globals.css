@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 250 249 245;
+    --foreground: 31 30 26;
+    color-scheme: light;
+  }
+
+  html, body {
+    @apply bg-ivory-50 text-ink-900 antialiased;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+  }
+
+  /* Subtle paper-grain texture (Claude-style) */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background-image: radial-gradient(circle at 1px 1px, rgba(31, 30, 26, 0.025) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+
+  h1, h2, h3 { @apply font-serif tracking-tight; }
+  h1 { @apply text-3xl md:text-4xl font-medium; }
+  h2 { @apply text-2xl md:text-3xl font-medium; }
+  h3 { @apply text-xl md:text-2xl font-medium; }
+
+  ::selection { background-color: rgb(250 220 206); color: rgb(31 30 26); }
+
+  /* Scrollbar */
+  *::-webkit-scrollbar { width: 10px; height: 10px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb { background: rgb(226 221 204); border-radius: 5px; border: 2px solid transparent; background-clip: content-box; }
+  *::-webkit-scrollbar-thumb:hover { background: rgb(201 196 178); border: 2px solid transparent; background-clip: content-box; }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-ivory-300 shadow-soft;
+  }
+
+  .prose-claude {
+    @apply text-ink-800 leading-relaxed;
+  }
+  .prose-claude h1 { @apply font-serif text-3xl mt-6 mb-4 text-ink-900; }
+  .prose-claude h2 { @apply font-serif text-2xl mt-8 mb-3 text-ink-900 border-b border-ivory-300 pb-2; }
+  .prose-claude h3 { @apply font-serif text-xl mt-6 mb-2 text-ink-800; }
+  .prose-claude p { @apply my-3; }
+  .prose-claude ul { @apply my-3 ml-6 list-disc space-y-1; }
+  .prose-claude ol { @apply my-3 ml-6 list-decimal space-y-1; }
+  .prose-claude code { @apply px-1.5 py-0.5 rounded bg-ivory-200 text-accent-700 text-[0.875em] font-mono; }
+  .prose-claude pre { @apply my-4 p-4 rounded-lg bg-ink-900 text-ivory-100 overflow-x-auto; }
+  .prose-claude pre code { @apply bg-transparent text-ivory-100 p-0; }
+  .prose-claude blockquote { @apply border-l-2 border-accent-500 pl-4 italic text-ink-600 my-4; }
+  .prose-claude a { @apply text-accent-600 underline decoration-accent-100 underline-offset-4 hover:decoration-accent-500; }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+}

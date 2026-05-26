@@ -1,0 +1,2 @@
+# Auto-generated migrations live here.
+# Run: alembic revision --autogenerate -m "your message"

@@ -1,0 +1,9 @@
+"""Audit repository."""
+from __future__ import annotations
+
+from app.models.audit import AuditLog
+from app.repositories.base import BaseRepository
+
+
+class AuditRepository(BaseRepository[AuditLog]):
+    model = AuditLog
